@@ -47,10 +47,10 @@ CREATE OR REPLACE VIEW dish_nutrition_full AS
 SELECT
     d.id AS dish_id,
     dn.is_manual,
-    COALESCE(dnm.calories,      t.calories)      AS calories,
-    COALESCE(dnm.protein,       t.protein)       AS protein,
-    COALESCE(dnm.fat,           t.fat)           AS fat,
-    COALESCE(dnm.carbohydrates, t.carbohydrates) AS carbohydrates
+    CASE WHEN dn.is_manual THEN dnm.calories      ELSE t.calories      END AS calories,
+    CASE WHEN dn.is_manual THEN dnm.protein       ELSE t.protein       END AS protein,
+    CASE WHEN dn.is_manual THEN dnm.fat           ELSE t.fat           END AS fat,
+    CASE WHEN dn.is_manual THEN dnm.carbohydrates ELSE t.carbohydrates END AS carbohydrates
 FROM dishes d
 LEFT JOIN dish_nutrition dn         ON dn.dish_id = d.id
 LEFT JOIN dish_nutrition_manual dnm ON dnm.dish_id = d.id
