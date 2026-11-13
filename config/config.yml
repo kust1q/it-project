@@ -19,10 +19,10 @@ rabbitmq:
 
 clickhouse:
   host: localhost
-  port: "9002"
+  port: "9000"
 
 minio:
   host: localhost
-  port: "9000"
+  port: "9011"
   bucket: restaurant
   use_ssl: false
