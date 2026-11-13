@@ -6,7 +6,7 @@ admin:
 
 postgres:
   host: localhost
-  port: "5432"
+  port: "6432"
   sslmode: disable
 
 redis:
