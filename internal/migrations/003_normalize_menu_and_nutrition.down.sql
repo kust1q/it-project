@@ -18,7 +18,7 @@ WHERE m.dish_id = dn.dish_id;
 DROP TABLE IF EXISTS dish_nutrition_manual;
 
 ALTER TABLE dish_nutrition
-    ALTER COLUMN is_manual DROP DEFAULT;
+    ALTER COLUMN is_manual SET DEFAULT false;
 
 ALTER TABLE dish_nutrition ADD CONSTRAINT dish_nutrition_check CHECK (
     (NOT is_manual AND calories IS NULL AND protein IS NULL AND fat IS NULL AND carbohydrates IS NULL)
