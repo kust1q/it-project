@@ -27,6 +27,21 @@ func Load() (Config, error) {
 		return Config{}, fmt.Errorf("config.Load.parseConfig: %w", err)
 	}
 
+	for _, item := range []struct {
+		name string
+		host *string
+	}{
+		{"POSTGRES_HOST", &cfg.Postgres.Host},
+		{"REDIS_HOST", &cfg.Redis.Host},
+		{"RABBITMQ_HOST", &cfg.RabbitMQ.Host},
+		{"CLICKHOUSE_HOST", &cfg.ClickHouse.Host},
+		{"MINIO_HOST", &cfg.Minio.Host},
+	} {
+		if value := os.Getenv(item.name); value != "" {
+			*item.host = value
+		}
+	}
+
 	cfg.Postgres.User = os.Getenv("POSTGRES_USER")
 	cfg.Postgres.Password = os.Getenv("POSTGRES_PASSWORD")
 	cfg.Postgres.DBName = os.Getenv("POSTGRES_DB")
