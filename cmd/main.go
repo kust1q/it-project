@@ -2,12 +2,17 @@ package main
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"log/slog"
+	"net"
+	"net/http"
 	"os"
 	"os/signal"
 	"syscall"
+	"time"
 
+	"project/internal/api/handler"
 	"project/internal/config"
 	"project/internal/repository/clickhouse"
 	"project/internal/repository/minio"
@@ -83,8 +88,43 @@ func run(logger *slog.Logger) error {
 	}
 	logger.Info("connected to minio")
 
-	logger.Info("application started")
-	<-ctx.Done()
-	logger.Info("application stopping")
+	server := &http.Server{
+		Addr:              net.JoinHostPort("", cfg.App.Port),
+		Handler:           handler.New().InitRouters(),
+		ReadHeaderTimeout: 5 * time.Second,
+	}
+	listener, err := net.Listen("tcp", server.Addr)
+	if err != nil {
+		return fmt.Errorf("main.run.listenHTTP: %w", err)
+	}
+
+	serverErrors := make(chan error, 1)
+	go func() {
+		serverErrors <- server.Serve(listener)
+	}()
+	logger.Info("http server started", "address", server.Addr)
+
+	select {
+	case err := <-serverErrors:
+		if !errors.Is(err, http.ErrServerClosed) {
+			return fmt.Errorf("main.run.serveHTTP: %w", err)
+		}
+		return nil
+	case <-ctx.Done():
+		logger.Info("application stopping")
+	}
+
+	shutdownCtx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+	if err := server.Shutdown(shutdownCtx); err != nil {
+		if closeErr := server.Close(); closeErr != nil {
+			logger.Error("failed to close http server", "error", closeErr)
+		}
+		return fmt.Errorf("main.run.shutdownHTTP: %w", err)
+	}
+	if err := <-serverErrors; !errors.Is(err, http.ErrServerClosed) {
+		return fmt.Errorf("main.run.serveHTTP: %w", err)
+	}
+	logger.Info("http server stopped")
 	return nil
 }
