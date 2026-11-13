@@ -13,7 +13,7 @@ SET calories      = m.calories,
     fat           = m.fat,
     carbohydrates = m.carbohydrates
 FROM dish_nutrition_manual m
-WHERE m.dish_id = dn.dish_id;
+WHERE m.dish_id = dn.dish_id AND dn.is_manual;
 
 DROP TABLE IF EXISTS dish_nutrition_manual;
 
