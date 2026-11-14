@@ -4,7 +4,7 @@ ALTER TABLE menu_drafts ADD COLUMN IF NOT EXISTS published_at timestamptz;
 DROP TABLE IF EXISTS menu_published;
 ALTER TABLE menu_drafts DROP COLUMN IF EXISTS status;
 
-DROP VIEW IF EXISTS dish_nutrition_full;
+DROP VIEW IF EXISTS dish_nutrition_view;
 ALTER TABLE dish_nutrition
     ADD COLUMN IF NOT EXISTS calories numeric(10,2),
     ADD COLUMN IF NOT EXISTS protein numeric(10,2),
@@ -19,7 +19,7 @@ ALTER TABLE dish_nutrition ADD CONSTRAINT dish_nutrition_values_check CHECK (
 );
 DROP TABLE IF EXISTS dish_nutrition_manual;
 
-CREATE OR REPLACE VIEW dish_nutrition_full AS
+CREATE OR REPLACE VIEW dish_nutrition_view AS
 SELECT d.id AS dish_id, dn.is_manual,
     CASE WHEN dn.is_manual THEN dn.calories ELSE t.calories END AS calories,
     CASE WHEN dn.is_manual THEN dn.protein ELSE t.protein END AS protein,

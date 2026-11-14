@@ -1,6 +1,6 @@
 BEGIN;
 
-DROP VIEW IF EXISTS dish_nutrition_full;
+DROP VIEW IF EXISTS dish_nutrition_view;
 
 ALTER TABLE dish_nutrition ADD COLUMN IF NOT EXISTS calories      numeric(10,2);
 ALTER TABLE dish_nutrition ADD COLUMN IF NOT EXISTS protein       numeric(10,2);

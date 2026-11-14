@@ -1,6 +1,6 @@
 BEGIN;
 
-CREATE TABLE IF NOT EXISTS restaurant_opening_hours (
+CREATE TABLE IF NOT EXISTS restaurant_working_time (
     id bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     restaurant_id bigint NOT NULL REFERENCES restaurant(id) ON DELETE CASCADE,
     day_of_week smallint NOT NULL CHECK (day_of_week BETWEEN 1 AND 7),

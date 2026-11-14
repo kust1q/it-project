@@ -1,6 +1,6 @@
 BEGIN;
 
-DROP VIEW IF EXISTS dish_nutrition_full;
+DROP VIEW IF EXISTS dish_nutrition_view;
 CREATE TABLE IF NOT EXISTS dish_nutrition_manual (
     dish_id bigint PRIMARY KEY REFERENCES dishes(id) ON DELETE CASCADE,
     calories numeric(10,2) NOT NULL CHECK (calories >= 0),
@@ -12,7 +12,7 @@ ALTER TABLE dish_nutrition DROP CONSTRAINT IF EXISTS dish_nutrition_values_check
 ALTER TABLE dish_nutrition DROP COLUMN IF EXISTS calories, DROP COLUMN IF EXISTS protein,
     DROP COLUMN IF EXISTS fat, DROP COLUMN IF EXISTS carbohydrates;
 
-CREATE OR REPLACE VIEW dish_nutrition_full AS
+CREATE OR REPLACE VIEW dish_nutrition_view AS
 SELECT d.id AS dish_id, dn.is_manual,
     CASE WHEN dn.is_manual AND dnm.dish_id IS NOT NULL THEN dnm.calories ELSE t.calories END AS calories,
     CASE WHEN dn.is_manual AND dnm.dish_id IS NOT NULL THEN dnm.protein ELSE t.protein END AS protein,

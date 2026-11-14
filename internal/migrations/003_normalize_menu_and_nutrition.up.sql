@@ -48,7 +48,7 @@ INSERT INTO dish_nutrition (dish_id, is_manual)
 SELECT id, false FROM dishes
 ON CONFLICT (dish_id) DO NOTHING;
 
-CREATE OR REPLACE VIEW dish_nutrition_full AS
+CREATE OR REPLACE VIEW dish_nutrition_view AS
 SELECT
     d.id AS dish_id,
     dn.is_manual,
