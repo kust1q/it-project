@@ -34,6 +34,7 @@ CREATE TABLE IF NOT EXISTS dishes (
     is_available boolean NOT NULL DEFAULT false,
     is_stopped boolean NOT NULL DEFAULT false,
     is_archived boolean NOT NULL DEFAULT false,
+    created_at timestamptz NOT NULL DEFAULT now(),
     signature_since timestamptz
 );
 
