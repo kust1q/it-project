@@ -1,25 +1,5 @@
 BEGIN;
 
-CREATE TABLE IF NOT EXISTS menu_published (
-    draft_id      bigint PRIMARY KEY REFERENCES menu_drafts(id) ON DELETE CASCADE,
-    published_at  timestamptz NOT NULL
-);
-
-INSERT INTO menu_published (draft_id, published_at)
-SELECT id, published_at
-FROM menu_drafts
-WHERE status = 'published'
-  AND published_at IS NOT NULL
-ON CONFLICT (draft_id) DO NOTHING;
-
-ALTER TABLE menu_drafts DROP COLUMN IF EXISTS published_at;
-
-ALTER TABLE menu_drafts DROP CONSTRAINT IF EXISTS menu_drafts_check;
-ALTER TABLE menu_drafts DROP CONSTRAINT IF EXISTS menu_drafts_status_check;
-ALTER TABLE menu_drafts
-    ADD CONSTRAINT menu_drafts_status_check
-    CHECK (status IN ('draft', 'published'));
-
 CREATE TABLE IF NOT EXISTS dish_nutrition_manual (
     dish_id        bigint PRIMARY KEY REFERENCES dishes(id) ON DELETE CASCADE,
     calories       numeric(10,2) NOT NULL CHECK (calories >= 0),

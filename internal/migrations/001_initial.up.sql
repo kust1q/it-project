@@ -34,8 +34,7 @@ CREATE TABLE IF NOT EXISTS dishes (
     is_available boolean NOT NULL DEFAULT false,
     is_stopped boolean NOT NULL DEFAULT false,
     is_archived boolean NOT NULL DEFAULT false,
-    signature_since timestamptz,
-    menu_version bigint NOT NULL DEFAULT 1 CHECK (menu_version > 0)
+    signature_since timestamptz
 );
 
 CREATE TABLE IF NOT EXISTS dish_photos (
@@ -95,24 +94,6 @@ CREATE TABLE IF NOT EXISTS admins (
     login text NOT NULL UNIQUE CHECK (btrim(login) <> ''),
     password_hash text NOT NULL CHECK (btrim(password_hash) <> ''),
     is_active boolean NOT NULL DEFAULT true
-);
-
-CREATE TABLE IF NOT EXISTS menu_drafts (
-    id bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    author_id bigint NOT NULL REFERENCES admins(id) ON DELETE RESTRICT,
-    status text NOT NULL DEFAULT 'draft' CHECK (status IN ('draft', 'published')),
-    created_at timestamptz NOT NULL DEFAULT now(),
-    published_at timestamptz,
-    CHECK ((status = 'draft' AND published_at IS NULL) OR (status = 'published' AND published_at IS NOT NULL))
-);
-
-CREATE TABLE IF NOT EXISTS menu_draft_items (
-    draft_id bigint NOT NULL REFERENCES menu_drafts(id) ON DELETE CASCADE,
-    dish_id bigint NOT NULL REFERENCES dishes(id) ON DELETE RESTRICT,
-    price numeric(12,2) NOT NULL CHECK (price > 0),
-    is_available boolean NOT NULL,
-    original_version bigint NOT NULL CHECK (original_version > 0),
-    PRIMARY KEY (draft_id, dish_id)
 );
 
 CREATE TABLE IF NOT EXISTS promotions (

@@ -1,9 +1,5 @@
 BEGIN;
 
-ALTER TABLE menu_drafts ADD COLUMN IF NOT EXISTS published_at timestamptz;
-DROP TABLE IF EXISTS menu_published;
-ALTER TABLE menu_drafts DROP COLUMN IF EXISTS status;
-
 DROP VIEW IF EXISTS dish_nutrition_view;
 ALTER TABLE dish_nutrition
     ADD COLUMN IF NOT EXISTS calories numeric(10,2),

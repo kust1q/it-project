@@ -30,11 +30,4 @@ LEFT JOIN LATERAL (
     WHERE di.dish_id = d.id
 ) t ON true;
 
-ALTER TABLE menu_drafts ADD COLUMN IF NOT EXISTS status text NOT NULL DEFAULT 'draft';
-ALTER TABLE menu_drafts ADD CONSTRAINT menu_drafts_status_check CHECK (status IN ('draft', 'published'));
-CREATE TABLE IF NOT EXISTS menu_published (
-    draft_id bigint PRIMARY KEY REFERENCES menu_drafts(id) ON DELETE CASCADE,
-    published_at timestamptz NOT NULL
-);
-ALTER TABLE menu_drafts DROP COLUMN IF EXISTS published_at;
 COMMIT;

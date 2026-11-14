@@ -12,11 +12,4 @@ CREATE TABLE IF NOT EXISTS restaurant_working_time (
 
 ALTER TABLE restaurant DROP COLUMN IF EXISTS opening_hours;
 
-ALTER TABLE dishes DROP COLUMN IF EXISTS menu_version;
-ALTER TABLE menu_draft_items DROP COLUMN IF EXISTS original_version;
-
-CREATE UNIQUE INDEX IF NOT EXISTS one_active_menu_draft
-ON menu_drafts ((true))
-WHERE status = 'draft';
-
 COMMIT;
