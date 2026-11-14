@@ -1,0 +1,5 @@
+BEGIN;
+
+DROP TABLE IF EXISTS dish_views;
+
+COMMIT;
