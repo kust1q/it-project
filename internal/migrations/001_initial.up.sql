@@ -103,6 +103,7 @@ CREATE TABLE IF NOT EXISTS promotions (
     starts_at timestamptz NOT NULL,
     ends_at timestamptz NOT NULL,
     is_enabled boolean NOT NULL DEFAULT false,
+    applies_to_all boolean NOT NULL DEFAULT false,
     CHECK (starts_at < ends_at)
 );
 
