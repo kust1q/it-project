@@ -30,11 +30,7 @@ DECLARE
     v_new_data  jsonb;
     v_entity_id bigint;
 BEGIN
-    BEGIN
-        v_admin_id := NULLIF(btrim(current_setting('app.current_admin_id', true)), '')::bigint;
-    EXCEPTION WHEN OTHERS THEN
-        v_admin_id := NULL;
-    END;
+    v_admin_id := NULLIF(btrim(current_setting('app.current_admin_id', true)), '')::bigint;
 
     IF TG_OP = 'INSERT' THEN
         v_new_data  := to_jsonb(NEW);
