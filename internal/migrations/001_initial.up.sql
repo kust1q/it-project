@@ -31,7 +31,6 @@ CREATE TABLE IF NOT EXISTS dishes (
     description text NOT NULL DEFAULT '',
     portion_weight numeric(10,2) NOT NULL CHECK (portion_weight > 0),
     price numeric(12,2) NOT NULL CHECK (price > 0),
-    is_available boolean NOT NULL DEFAULT false,
     is_stopped boolean NOT NULL DEFAULT false,
     is_archived boolean NOT NULL DEFAULT false,
     created_at timestamptz NOT NULL DEFAULT now(),
@@ -110,7 +109,7 @@ CREATE TABLE IF NOT EXISTS promotions (
 
 CREATE TABLE IF NOT EXISTS promotion_dishes (
     promotion_id bigint NOT NULL REFERENCES promotions(id) ON DELETE CASCADE,
-    dish_id bigint NOT NULL REFERENCES dishes(id) ON DELETE RESTRICT,
+    dish_id bigint NOT NULL REFERENCES dishes(id) ON DELETE CASCADE,
     PRIMARY KEY (promotion_id, dish_id)
 );
 
