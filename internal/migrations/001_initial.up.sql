@@ -31,7 +31,7 @@ CREATE TABLE IF NOT EXISTS dishes (
     description text NOT NULL DEFAULT '',
     portion_weight numeric(10,2) NOT NULL CHECK (portion_weight > 0),
     price numeric(12,2) NOT NULL CHECK (price > 0),
-    is_stopped boolean NOT NULL DEFAULT false,
+    stopped_until timestamptz,
     is_archived boolean NOT NULL DEFAULT false,
     created_at timestamptz NOT NULL DEFAULT now(),
     signature_since timestamptz

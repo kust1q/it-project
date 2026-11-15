@@ -1,5 +1,6 @@
 BEGIN;
 
+DROP TABLE IF EXISTS dish_of_day;
 DROP TABLE IF EXISTS dish_views;
 
 COMMIT;
