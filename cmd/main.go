@@ -17,6 +17,8 @@ import (
 	"project/internal/repository/minio"
 	"project/internal/repository/postgres"
 	"project/internal/repository/redis"
+	"project/internal/services/menu"
+	"project/internal/services/showcase"
 )
 
 func main() {
@@ -64,9 +66,13 @@ func run(logger *slog.Logger) error {
 	}
 	logger.Info("connected to minio")
 
+	menuRepo := postgres.NewMenuRepository(db)
+	menuService := menu.New(menuRepo, logger)
+	showcaseService := showcase.New(menuRepo)
+
 	server := &http.Server{
 		Addr:              net.JoinHostPort("", cfg.App.Port),
-		Handler:           handler.New().InitRouters(),
+		Handler:           handler.New(menuService, showcaseService, logger).InitRouters(),
 		ReadHeaderTimeout: 5 * time.Second,
 	}
 	listener, err := net.Listen("tcp", server.Addr)
